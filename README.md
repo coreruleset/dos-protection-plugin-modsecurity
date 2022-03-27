@@ -8,7 +8,9 @@ If the burst counter (`IP:DOS_BURST_COUNTER`) is greater equal 2, then the block
 
 There is a stricter sibling to this rule (9514170) in paranoia level 2, where the burst counter check (`IP:DOS_BURST_COUNTER`) hits at greater equal 1.
 
-The blocking is done in phase 1: When the blocking flag is encountered (`IP:DOS_BLOCK`), then the request is dropped without sending a response. If this happens, then a counter is # raised (`IP:DOS_BLOCK_COUNTER`).
+### Blocking
+
+The blocking is done in phase 1: When the blocking flag is encountered (`IP:DOS_BLOCK`), then the request is dropped without sending a response. If this happens, then a counter is raised (`IP:DOS_BLOCK_COUNTER`).
 
 When an IP address is blocked for the first time, then the blocking is reported in a message and a flag (`IP:DOS_BLOCK_FLAG`) is set. This flag expires in 60 seconds.
 
@@ -18,6 +20,8 @@ In order to be able to display the counter (`IP:DOS_BLOCK_COUNTER`) and resettin
 
 ### Variables
 
+| Variable                   | Description                                                 |
+| -------------------------- | ----------------------------------------------------------- |
 | `IP:DOS_BLOCK`             | Flag if an IP address should be blocked                     |
 | `IP:DOS_BLOCK_COUNTER`     | Counter of blocked requests                                 |
 | `IP:DOS_BLOCK_FLAG`        | Flag keeping track of alert. Flag expires after 60 seconds. |

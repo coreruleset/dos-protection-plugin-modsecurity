@@ -41,6 +41,12 @@ As a precondition for these rules, please set the following three variables in `
 
 And make sure that `TX:STATIC_EXTENSIONS` is set as required, also in `dos-protection-config.conf`.
 
+## Testing
+
+Hit the service quickly enough (within the set time slice) and frequently enough (exceeding the set threshold) and observe that connections are then dropped.
+
+Be sure that the test connections are _not_ hitting an exempt static extension, as this will not trigger a block and will not be a valid test.
+
 ## License
 
 Copyright (c) 2022 OWASP ModSecurity Core Rule Set project. All rights reserved.

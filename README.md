@@ -33,13 +33,13 @@ In order to be able to display the counter (`IP:DOS_BLOCK_COUNTER`) and resettin
 | `TX:DOS_BURST_TIME_SLICE`  | Period in seconds when we will forget a burst               |
 | `TX:STATIC_EXTENSIONS`     | Paths which can be ignored with regards to DoS              |
 
-As a precondition for these rules, please set the following three variables:
+As a precondition for these rules, please set the following three variables in `dos-protection-config.conf`:
 
 - `TX:DOS_BLOCK_TIMEOUT`
 - `TX:DOS_COUNTER_THRESHOLD`
 - `TX:DOS_BURST_TIME_SLICE`
 
-And make sure that `TX:STATIC_EXTENSIONS` is also set.
+And make sure that `TX:STATIC_EXTENSIONS` is set as required, also in `dos-protection-config.conf`.
 
 ## License
 

@@ -1,4 +1,10 @@
-# OWASP ModSecurity Core Rule Set - DoS Protection Plugin
+# OWASP ModSecurity Core Rule Set - DoS Protection Plugin (ModSecurity v2)
+
+## Compatibility
+
+**Important:** This plugin is currently *only* compatible with ModSecurity v2.
+
+Specifically, this plugin is **not** compatible with ModSecurity v3 ("libmodsecurity") because that engine does not implement the `expirevar` action, which this plugin relies on.
 
 ## Description of Mechanics
 

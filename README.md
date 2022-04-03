@@ -6,6 +6,18 @@
 
 Specifically, this plugin is **not** compatible with ModSecurity v3 ("libmodsecurity") because that engine does not implement the `expirevar` action, which this plugin relies on.
 
+## Plugin Expectations: Suitability and Scale
+
+ModSecurity and CRS are suited to protect against small-scale, application level denial-of-service (DoS) attacks. DoS attacks at the network level, distributed DoS (DDoS) attacks, and larger DoS attacks are hard to fight with ModSecurity. The reason for this is that the means of ModSecurity degrade under load and hence its ability to effectively handle DoS attacks degrades as well.
+
+In such a situation, CRS proposes the use of one or several of the following options:
+
+- `mod_reqtimeout` on Apache to deal with request delaying attacks like [Slowloris](https://en.wikipedia.org/wiki/Slowloris_(computer_security))
+- `mod_evasive` on Apache since it's been around for more than 20 years
+- `mod_qos` on Apache which provides granular control over clients hammering the server
+- Using a load balancer / traffic washer with DoS capabilities
+- A DoS protection service and/or content delivery network
+
 ## Description of Mechanics
 
 When a request hits a non-static resource (`TX:STATIC_EXTENSIONS`), then a counter for the IP address is being raised (`IP:DOS_COUNTER`). If the counter (`IP:DOS_COUNTER`) hits a limit (`TX:DOS_COUNTER_THRESHOLD`), then a burst is identified (`IP:DOS_BURST_COUNTER`) and the counter (`IP:DOS_COUNTER`) is reset. The burst counter expires within a timeout period (`TX:DOS_BURST_TIME_SLICE`).

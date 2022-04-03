@@ -20,42 +20,45 @@ In such a situation, CRS proposes the use of one or several of the following opt
 
 ## Description of Mechanics
 
-When a request hits a non-static resource (`TX:STATIC_EXTENSIONS`), then a counter for the IP address is being raised (`IP:DOS_COUNTER`). If the counter (`IP:DOS_COUNTER`) hits a limit (`TX:DOS_COUNTER_THRESHOLD`), then a burst is identified (`IP:DOS_BURST_COUNTER`) and the counter (`IP:DOS_COUNTER`) is reset. The burst counter expires within a timeout period (`TX:DOS_BURST_TIME_SLICE`).
+When a request hits a non-static resource (`TX:STATIC_EXTENSIONS`), then a counter for the IP address is increased (`IP:DOS_COUNTER`). If the counter (`IP:DOS_COUNTER`) hits a limit (`TX:DOS_COUNTER_THRESHOLD`) within a certain window (`TX:DOS_COUNTER_TIME_SLICE`), then a burst is identified (`IP:DOS_BURST_COUNTER`) and the counter (`IP:DOS_COUNTER`) is reset. The burst counter expires after a defined amount of time (`TX:DOS_BURST_TIME_SLICE`).
 
-If the burst counter (`IP:DOS_BURST_COUNTER`) is greater equal 2, then the blocking flag is being set (`IP:DOS_BLOCK`). The blocking flag (`IP:DOS_BLOCK`) expires within a timeout period (`TX:DOS_BLOCK_TIMEOUT`). All this counting happens in phase 5.
+If the burst counter (`IP:DOS_BURST_COUNTER`) is greater equal 2, then the blocking variable is set (`IP:DOS_BLOCK`). The blocking variable (`IP:DOS_BLOCK`) expires within a timeout period (`TX:DOS_BLOCK_TIMEOUT`). All this counting happens in phase 5.
 
 There is a stricter sibling to this rule (9514170) in paranoia level 2, where the burst counter check (`IP:DOS_BURST_COUNTER`) hits at greater equal 1.
 
 ### Blocking
 
-The blocking is done in phase 1: When the blocking flag is encountered (`IP:DOS_BLOCK`), then the request is dropped without sending a response. If this happens, then a counter is raised (`IP:DOS_BLOCK_COUNTER`).
+The blocking is done in phase 1: When the blocking variable is set (`IP:DOS_BLOCK`), then the request is dropped without sending a response. If this happens, a counter is incremented (`IP:DOS_BLOCK_COUNTER`).
 
-When an IP address is blocked for the first time, then the blocking is reported in a message and a flag (`IP:DOS_BLOCK_FLAG`) is set. This flag expires in 60 seconds.
+When an IP address is blocked for the first time, the blocking is reported in a message and a flag (`IP:DOS_BLOCK_FLAG`) is set. This flag expires after the number of seconds configured with `TX:DOS_REPORTING_TIMEOUT`.
 
-When an IP address is blocked and the flag (`IP:DOS_BLOCK_FLAG`) is set, then the blocking is not being reported (to prevent a flood of alerts). When the flag (`IP:DOS_BLOCK_FLAG`) has expired and a new request is being blocked, then the counter (`IP:DOS_BLOCK_COUNTER`) is being reset to 0 and the block is being treated as the first block (-> alert).
+When an IP address is blocked and the flag (`IP:DOS_BLOCK_FLAG`) is set, the blocking is not reported (to prevent a flood of alerts). When the flag (`IP:DOS_BLOCK_FLAG`) has expired (after `TX:DOS_REPORTING_TIMEOUT` seconds) and a new request is blocked, the counter (`IP:DOS_BLOCK_COUNTER`) is reset to 0 and the block is treated as the first block (-> alert).
 
 In order to be able to display the counter (`IP:DOS_BLOCK_COUNTER`) and resetting it at the same time, we copy the counter (`IP:DOS_BLOCK_COUNTER`) into a different variable (`TX:DOS_BLOCK_COUNTER`), which is then displayed in turn.
 
 ### Variables
 
-| Variable                   | Description                                                 |
-| -------------------------- | ----------------------------------------------------------- |
-| `IP:DOS_BLOCK`             | Flag if an IP address should be blocked                     |
-| `IP:DOS_BLOCK_COUNTER`     | Counter of blocked requests                                 |
-| `IP:DOS_BLOCK_FLAG`        | Flag keeping track of alert. Flag expires after 60 seconds. |
-| `IP:DOS_BURST_COUNTER`     | Burst counter                                               |
-| `IP:DOS_COUNTER`           | Request counter (static resources are ignored)              |
-| `TX:DOS_BLOCK_COUNTER`     | Copy of `IP:DOS_BLOCK_COUNTER` (needed for display reasons) |
-| `TX:DOS_BLOCK_TIMEOUT`     | Period in seconds a blocked IP will be blocked              |
-| `TX:DOS_COUNTER_THRESHOLD` | Limit of requests, where a burst is identified              |
-| `TX:DOS_BURST_TIME_SLICE`  | Period in seconds when we will forget a burst               |
-| `TX:STATIC_EXTENSIONS`     | Paths which can be ignored with regards to DoS              |
+| Variable                   | Description                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------ |
+| `IP:DOS_BLOCK`             | Flag if an IP address should be blocked                                              |
+| `IP:DOS_BLOCK_COUNTER`     | Counter of blocked requests                                                          |
+| `IP:DOS_BLOCK_FLAG`        | Flag keeping track of alert. Flag expires after 60 seconds.                          |
+| `IP:DOS_BURST_COUNTER`     | Burst counter                                                                        |
+| `IP:DOS_COUNTER`           | Request counter (static resources are ignored)                                       |
+| `TX:DOS_BLOCK_COUNTER`     | Copy of `IP:DOS_BLOCK_COUNTER` (needed for display reasons)                          |
+| `TX:DOS_BLOCK_TIMEOUT`     | Period in seconds a blocked IP will be blocked                                       |
+| `TX:DOS_COUNTER_THRESHOLD` | Limit of requests, where a burst is identified                                       |
+| `TX:DOS_COUNTER_TIME_SLICE`| Period in seconds of window for which to count requests against the current burst    |
+| `TX:DOS_BURST_TIME_SLICE`  | Period in seconds when we will forget a burst                                        |
+| `TX:STATIC_EXTENSIONS`     | Paths which can be ignored with regards to DoS                                       |
 
-As a precondition for these rules, please set the following three variables in `dos-protection-config.conf`:
+As a precondition for these rules, please set the following five variables in `dos-protection-config.conf`:
 
 - `TX:DOS_BLOCK_TIMEOUT`
 - `TX:DOS_COUNTER_THRESHOLD`
+- `TX:DOS_COUNTER_TIME_SLICE`
 - `TX:DOS_BURST_TIME_SLICE`
+- `TX:DOS_REPORTING_TIMEOUT`
 
 And make sure that `TX:STATIC_EXTENSIONS` is set as required, also in `dos-protection-config.conf`.
 

@@ -12,3 +12,4 @@
 - [Anna Winkler](https://github.com/annawinkler)
 - [Felipe Zimmerle](https://github.com/zimmerle)
 - [Felipe Zipitría](https://github.com/fzipi)
+- [Max Leske](https://github.com/theseion)

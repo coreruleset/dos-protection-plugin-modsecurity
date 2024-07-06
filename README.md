@@ -61,6 +61,6 @@ Be sure that the test connections are _not_ hitting an exempt static extension, 
 
 ## License
 
-Copyright (c) 2024 OWASP CRS project. All rights reserved.
+Copyright (c) 2021-2024 OWASP CRS project. All rights reserved.
 
 The OWASP CRS and its official plugins are distributed under Apache Software License (ASL) version 2. Please see the enclosed LICENSE file for full details.

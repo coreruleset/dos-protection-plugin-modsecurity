@@ -1,5 +1,6 @@
 # Contributors to DoS Protection Plugin
 
+- [Esad Cetiner](https://github.com/esadcetiner)
 - [Christian Folini](https://github.com/dune73)
 - [Ervin Hegedus](https://github.com/airween)
 - [Walter Hop](https://github.com/lifeforms)
